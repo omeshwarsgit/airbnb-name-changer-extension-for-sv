@@ -1,0 +1,9 @@
+.DS_Store
+.env
+.env.*
+*.log
+*.csv
+*.xls
+*.xlsx
+.idea/
+.vscode/

@@ -1,0 +1,17 @@
+{
+  "manifest_version": 3,
+  "name": "StayVista Airbnb Renamer",
+  "version": "1.1.1",
+  "description": "Changes Airbnb listing names in bulk from a Google Sheet queue and tracks every change back in the sheet.",
+  "icons": { "16": "icons/icon16.png", "32": "icons/icon32.png", "48": "icons/icon48.png", "128": "icons/icon128.png" },
+  "action": { "default_title": "Open StayVista Airbnb Renamer", "default_icon": { "16": "icons/icon16.png", "32": "icons/icon32.png" } },
+  "side_panel": { "default_path": "sidepanel.html" },
+  "background": { "service_worker": "background.js" },
+  "permissions": ["sidePanel", "storage", "tabs", "scripting", "notifications"],
+  "host_permissions": [
+    "https://*.airbnb.co.in/*",
+    "https://*.airbnb.com/*",
+    "https://script.google.com/*",
+    "https://script.googleusercontent.com/*"
+  ]
+}

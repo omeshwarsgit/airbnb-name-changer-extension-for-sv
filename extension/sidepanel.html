@@ -1,0 +1,115 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>StayVista Airbnb Renamer</title>
+  <link rel="stylesheet" href="sidepanel.css">
+</head>
+<body>
+  <header>
+    <div>
+      <div class="brand">StayVista · Airbnb Renamer</div>
+      <div class="sub" id="who">Not set up yet</div>
+    </div>
+    <span class="pill" id="conn">Offline</span>
+  </header>
+
+  <!-- RUN -->
+  <section class="card" id="runCard">
+    <div class="seg" role="tablist">
+      <button class="segbtn active" data-mode="assisted" id="modeAssisted">Assisted</button>
+      <button class="segbtn" data-mode="auto" id="modeAuto">Auto</button>
+    </div>
+    <p class="hint" id="modeHint">The tool opens each listing and fills the new name. You press <b>Save &amp; next</b> (or Ctrl+Enter) on the Airbnb page.</p>
+    <div class="warn hidden" id="autoWarn">
+      Auto mode clicks Save by itself. Airbnb's terms don't allow bots, so the account could be flagged.
+      It waits a random gap between listings and stops on any login or human-check page.
+      <label class="chk"><input type="checkbox" id="autoAck"> I understand, use auto mode</label>
+    </div>
+
+    <div class="grid2">
+      <label>Listings this run<input type="number" id="runTarget" min="1" max="1000" value="50"></label>
+      <label>Used today<div class="stat" id="dailyUsed">0 / 300</div></label>
+    </div>
+
+    <div class="row">
+      <button class="primary" id="startBtn">Start</button>
+      <button id="stopBtn" disabled>Stop</button>
+    </div>
+
+    <div class="progress"><div id="bar"></div></div>
+    <div class="counts">
+      <span><b id="cDone">0</b> done</span>
+      <span><b id="cSame">0</b> already ok</span>
+      <span><b id="cSkip">0</b> skipped</span>
+      <span><b id="cFail">0</b> failed</span>
+    </div>
+    <div class="now" id="now">Idle</div>
+  </section>
+
+  <!-- SHEET TOTALS -->
+  <section class="card">
+    <div class="cardhead"><h2>Google Sheet</h2><button class="link" id="refreshStats">Refresh</button></div>
+    <div class="totals" id="totals"><span class="muted">Connect the sheet in Settings.</span></div>
+  </section>
+
+  <!-- LOG -->
+  <section class="card">
+    <div class="cardhead"><h2>This session</h2><button class="link" id="dlLog">Download CSV</button></div>
+    <ol class="log" id="log"></ol>
+  </section>
+
+  <!-- IMPORT -->
+  <details class="card">
+    <summary><h2>Add listings to the sheet</h2></summary>
+    <p class="hint">Upload an .xlsx or .csv with an Airbnb link (or listing ID) column and a new-name column. Rows already in the sheet are not duplicated.</p>
+    <input type="file" id="file" accept=".xlsx,.xls,.csv">
+    <div id="mapBox" class="hidden">
+      <label>Tab<select id="mapSheet"></select></label>
+      <label>Airbnb link / ID column<select id="mapLink"></select></label>
+      <label>New name column<select id="mapName"></select></label>
+      <label>Property name column (optional)<select id="mapProp"></select></label>
+      <div class="hint" id="mapPreview"></div>
+      <button class="primary" id="importBtn">Send to sheet</button>
+    </div>
+  </details>
+
+  <!-- TEST -->
+  <details class="card">
+    <summary><h2>Test one listing (no changes)</h2></summary>
+    <p class="hint">Opens the listing's title page and checks the tool can read the name and find the Save button. Nothing is changed.</p>
+    <input type="text" id="testLink" placeholder="Airbnb link or listing ID">
+    <button id="testBtn">Run test</button>
+    <pre class="out" id="testOut"></pre>
+  </details>
+
+  <!-- SETTINGS -->
+  <details class="card" id="settingsCard">
+    <summary><h2>Settings</h2></summary>
+    <label>Your name (goes in "Done By")<input type="text" id="operator" placeholder="e.g. Priyam"></label>
+    <label>Apps Script web app URL<input type="url" id="scriptUrl" placeholder="https://script.google.com/macros/s/…/exec"></label>
+    <label>Token (from the sheet's Settings tab)<input type="text" id="token"></label>
+    <label>Airbnb title page (use {id})<input type="text" id="editUrlTemplate"></label>
+    <div class="grid2">
+      <label>Daily limit (all modes)<input type="number" id="dailyCap" min="1" max="1000"></label>
+      <label>Rows claimed at a time<input type="number" id="batchSize" min="1" max="50"></label>
+      <label>Auto gap min (sec)<input type="number" id="minDelay" min="5" max="600"></label>
+      <label>Auto gap max (sec)<input type="number" id="maxDelay" min="5" max="900"></label>
+    </div>
+    <label class="chk"><input type="checkbox" id="retryFailed"> Also retry Failed rows (up to 3 attempts)</label>
+    <details class="adv">
+      <summary>Advanced (only if Airbnb changes its page)</summary>
+      <label>Title box CSS selector<input type="text" id="fieldSelector" placeholder="auto-detect"></label>
+      <label>Save button text<input type="text" id="saveText" placeholder="Save"></label>
+    </details>
+    <div class="row">
+      <button class="primary" id="saveSettings">Save settings</button>
+      <button id="testConn">Test connection</button>
+    </div>
+    <div class="hint" id="settingsMsg"></div>
+  </details>
+
+  <script src="lib/xlsx.full.min.js"></script>
+  <script src="sidepanel.js"></script>
+</body>
+</html>
